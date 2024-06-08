@@ -28,6 +28,8 @@ jobs:
           path: chinalist.conf
       - name: Commit and push
         run: |
+          git config --global user.name "kingmoon3"
+          git config --global user.email "kingxujw@gmail.com"
           git add chinalist.conf
           git commit -m "Updated DNS list" -a
           git push
