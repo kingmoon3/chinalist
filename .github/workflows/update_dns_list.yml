@@ -27,6 +27,8 @@ jobs:
         with:
           name: New-DNS-List
           path: chinalist.conf
+      - name: Clear duplicate Git config
+        run: git config --global --unset-all http.extraheader
       - name: Commit and push
         run: |
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
