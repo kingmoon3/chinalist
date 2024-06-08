@@ -1,0 +1,28 @@
+name: Fetch and Update DNS List
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at 00:00 every day
+jobs:
+  update-dns-list:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Fetch DNSMasq China List
+        run: |
+          curl <https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf> -o accelerated-domains.china.conf
+      - name: Convert to new format
+        run: |
+          sed -n 's/server=\/\(.*\)\/114.114.114.114/\1/p' accelerated-domains.china.conf > chinalist.conf
+      - name: Upload new DNS list to repository
+        uses: actions/upload-artifact@v2
+        with:
+          name: New-DNS-List
+          path: chinalist.conf
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add chinalist.conf
+          git commit -m "Updated DNS list" -a
+          git push
