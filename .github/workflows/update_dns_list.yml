@@ -31,7 +31,7 @@ jobs:
         run: git config --global --unset-all http.extraheader
       - name: Commit and push
         run: |
-          git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
+          git config --global http.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
           git add chinalist.conf
           git commit -m "Updated DNS list" -a
           git push
