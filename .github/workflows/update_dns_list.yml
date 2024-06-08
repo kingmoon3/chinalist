@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Fetch DNSMasq China List
         run: |
-          curl <<https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf>> -o accelerated-domains.china.conf
+          curl https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o accelerated-domains.china.conf
       - name: Convert to new format
         run: |
           sed -n 's/server=\\/\\(.*\\)\\/114.114.114.114/\\1/p' accelerated-domains.china.conf > chinalist.conf
