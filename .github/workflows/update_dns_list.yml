@@ -20,7 +20,8 @@ jobs:
           REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
-
+      - name: Clear any existing Git authorization settings
+        run: git config --global --unset-all http.extraheader
       - name: Upload new DNS list to repository
         uses: actions/upload-artifact@v2
         with:
@@ -28,8 +29,7 @@ jobs:
           path: chinalist.conf
       - name: Commit and push
         run: |
-          git config --global user.name "kingmoon3"
-          git config --global user.email "kingxujw@gmail.com"
+          git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
           git add chinalist.conf
           git commit -m "Updated DNS list" -a
           git push
