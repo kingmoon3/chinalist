@@ -1,37 +1,24 @@
-name: Fetch and Update DNS List
+name: Update .conf file and push to repository
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs at 00:00 every day
-  workflow_dispatch: # Allows manual trigger
+    - cron: '0 0 * * *' # Runs at midnight every day
+  workflow_dispatch: 
 jobs:
-  update-dns-list:
+  update_conf:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Fetch DNSMasq China List
-        run: |
-          curl https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o accelerated-domains.china.conf
-      - name: Convert to new format
-        run: |
-          sed -n 's#server=/\(.*\)/114.114.114.114#\1#p' accelerated-domains.china.conf > chinalist.conf
-      - name: Set up Git credentials
-        env:
-          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
-        run: |
-          git config --global user.name "kingmoon3"
-          git config --global user.email "kingxujw@gmail.com"
-          git config --global http.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
-      - name: Upload new DNS list to repository
-        uses: actions/upload-artifact@v2
-        with:
-          name: New-DNS-List
-          path: chinalist.conf
-      - name: Clear duplicate Git config
-        run: git config --global --unset-all http.extraheader
-      - name: Commit and push
-        run: |
-          git config --global http.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
-          git add chinalist.conf
-          git commit -m "Updated DNS list" -a
-          git push
+    - name: Check out the repository
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.REPO_TOKEN }}
+    - name: Fetch .conf file
+      run: curl https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o domains.conf
+    - name: Transform .conf content
+      run: sed -n 's#server=/\(.*\)/114.114.114.114#\1#p' domains.conf > formatted_domains.conf
+    - name: Push changes
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add formatted_domains.conf
+        git commit -m "Update .conf file"
+        git push
