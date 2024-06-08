@@ -19,6 +19,8 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
+          git config --global user.name "kingmoon3"
+          git config --global user.email "kingxujw@gmail.com"
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
       - name: Upload new DNS list to repository
         uses: actions/upload-artifact@v2
