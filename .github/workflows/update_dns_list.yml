@@ -20,8 +20,6 @@ jobs:
           REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${REPO_TOKEN}"
-      - name: Clear any existing Git authorization settings
-        run: git config --global --unset-all http.extraheader
       - name: Upload new DNS list to repository
         uses: actions/upload-artifact@v2
         with:
