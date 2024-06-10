@@ -19,6 +19,7 @@ jobs:
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git add chinalist.conf
-        git commit -m "Update .conf file"
+        git add domains.conf chinalist.conf
+        git diff-index --quiet HEAD || git commit -m "Update .conf file"
         git push
+
