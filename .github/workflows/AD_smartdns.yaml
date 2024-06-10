@@ -12,7 +12,7 @@ jobs:
       run: curl -s https://raw.githubusercontent.com/8680/GOODBYEADS/master/rules.txt -o rules.txt
     - name: Convert to SmartDNS format
       run: |
-        cat rules.txt | grep "^\\|\\|" | grep -o '^[^$]*' | sed 's/^\\|\\|/address \\//' | sed 's/\\^/#/' > smartdns-rules.conf
+        cat rules.txt | grep "^\\|\\|" | sed 's/^\\|\\|//' | sed 's/\\^$/#/' | sed 's/|/\\|/g' | awk '{print "address /"\$0}' > smartdns-rules.conf
     - name: Commit and push if there are changes
       run: |
         git config --global user.name 'github-actions'
