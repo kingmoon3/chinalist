@@ -17,7 +17,7 @@ jobs:
         sed "s/^\|\|//" | \
         sed "s/\^$/#/" | \
         sed "s/|/\|/g" | \
-        awk '{print "address /"\$0"#"}' \
+        awk '{print "address /"$0"#"}' \
         > smartdns-rules.conf
 
     - name: Commit and push if there are changes
