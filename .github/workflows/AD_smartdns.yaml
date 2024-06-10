@@ -1,23 +1,21 @@
-name: Transform Adblock Rules to SmartDNS Format
-# 触发 workflow 的事件：每当有 push 操作时
-on: push
+name: Convert Adblock Rules to SmartDNS Format
+on: [push, workflow_dispatch]
 jobs:
-  convert-rules:
+  transform:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.REPO_TOKEN }}
-      - name: Download Adblock Rules
-        run: curl https://raw.githubusercontent.com/8680/GOODBYEADS/master/rules.txt -o adblock-rules.txt
-      - name: Convert Adblock Rules to SmartDNS Format
-        run: |
-          awk '/^\|\|.*\^$/' adblock-rules.txt | cut -d'^' -f 1 | sed 's/\|\|/address=\//' > smartdns-rules.conf
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add smartdns-rules.conf
-          git diff-index --quiet HEAD || git commit -m 'Update SmartDNS Rules'
-          git push
+    - name: Check out the repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.REPO_TOKEN }}
+    - name: Download Adblock Rules
+      run: curl -s <https://raw.githubusercontent.com/8680/GOODBYEADS/master/rules.txt> -o rules.txt
+    - name: Convert to SmartDNS format
+      run: |
+        cat rules.txt | grep "^\\|\\|" | grep -o '^[^$]*' | sed 's/^\\|\\|/address \\//' | sed 's/\\^/#/' > smartdns-rules.conf
+    - name: Commit and push if there are changes
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add smartdns-rules.conf
+        git diff --staged --quiet || (git commit -m "Convert adblock rules to SmartDNS" && git push)
