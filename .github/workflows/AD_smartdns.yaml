@@ -10,7 +10,7 @@ jobs:
         with:
           token: ${{ secrets.REPO_TOKEN }}
       - name: Download Adblock Rules
-        run: curl <https://raw.githubusercontent.com/8680/GOODBYEADS/master/rules.txt> -o adblock-rules.txt
+        run: curl https://raw.githubusercontent.com/8680/GOODBYEADS/master/rules.txt -o adblock-rules.txt
       - name: Convert Adblock Rules to SmartDNS Format
         run: |
           awk '/^\|\|.*\^$/' adblock-rules.txt | cut -d'^' -f 1 | sed 's/\|\|/address=\//' > smartdns-rules.conf
