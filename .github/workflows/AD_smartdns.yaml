@@ -13,10 +13,10 @@ jobs:
     - name: Convert to SmartDNS format
       run: |
         cat rules.txt | \
-        grep "^\\|\\|" | \
-        sed "s/^\\|\\|//" | \
-        sed "s/\\^$/#/" | \
-        sed "s/|/\\|/g" | \
+        grep "^\|\|" | \
+        sed "s/^\|\|//" | \
+        sed "s/\^$/#/" | \
+        sed "s/|/\|/g" | \
         awk '{print "address /"\$0"#"}' \
         > smartdns-rules.conf
 
